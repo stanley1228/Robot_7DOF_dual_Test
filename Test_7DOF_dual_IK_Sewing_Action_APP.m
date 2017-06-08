@@ -35,15 +35,15 @@ theta1=theta1*(180)/pi
  
  %產生正方形O(60,0,0)  Q(80,-20,0)  R(80,-20,-20)  S(60,0,-20)
  %把此路徑分成90份
-O_R=[500 -50 0];
-Q_R=[500 -200 0];
-R_R=[500 -200 -220];
-S_R=[500 -50 -220];
+O_R=[300 -50 0];
+Q_R=[300 -200 0];
+R_R=[300 -200 -220];
+S_R=[300 -50 -220];
 
-O_L=[500 50 0];
-Q_L=[500 200 0];
-R_L=[500 200 -220];
-S_L=[500 50 -220];
+O_L=[300 50 0];
+Q_L=[300 200 0];
+R_L=[300 200 -220];
+S_L=[300 50 -220];
  
 Path_R=zeros(DEF_DESCRETE_POINT,3);%規畫的路徑點
 PathPoint_R=zeros(DEF_DESCRETE_POINT,3);%記錄實際上的點，畫圖使用
@@ -54,21 +54,65 @@ PathPoint_L=zeros(DEF_DESCRETE_POINT,3);%記錄實際上的點，畫圖使用
 PathTheta_L=zeros(DEF_DESCRETE_POINT,7);%記錄每軸角度，畫圖使用
 
 %畫正方形做IK FK測試
+% for t=1:1:DEF_DESCRETE_POINT
+%     if t<=25
+%         Path_R(t,1:3)=O_R+(Q_R-O_R)*t/25;
+%         Path_L(t,1:3)=O_L+(Q_L-O_L)*t/25;
+%     elseif t<=50
+%         Path_R(t,1:3)=Q_R+(R_R-Q_R)*(t-25)/25;
+%         Path_L(t,1:3)=Q_L+(R_L-Q_L)*(t-25)/25;
+%     elseif t<=75
+%         Path_R(t,1:3)=R_R+(S_R-R_R)*(t-50)/25;
+%         Path_L(t,1:3)=R_L+(S_L-R_L)*(t-50)/25;
+%     else 
+%         Path_R(t,1:3)=S_R+(O_R-S_R)*(t-75)/15;
+%         Path_L(t,1:3)=S_L+(O_L-S_L)*(t-75)/15;
+%     end
+% end
+
+%% 由起始點往前進100進行右邊線的縫紉   布料大小200x200  邊緣10
+R_point1 = [300 -10 0];
+L_point1 = [300 90 0];
+
+R_point2 = [500 -10 0]; %往前200
+L_point2 = [500 90 0]; %往前200
+
+%%進行旋轉90度
+R_point3 = [300 -10 0]; %右手鬆開後 x往後退200 
+L_point3 = [500 90 0]; %左手不動
+
+R_point4 = [500 -60 0]; %右手x往前200   y往右-50
+L_point4 = [300 140 0];  %左手x往後200  y往左50
+
+
+R_point5 = [300 -10 0]; %右手鬆開x往後200
+L_point5 = [300 90 0]; %左手不動
+
+%%往前200進行縫紉
+R_point6 = [500 -10 0]; %右手x往前200
+L_point6 = [500 90 0];  %左手x往前200
+
+
 for t=1:1:DEF_DESCRETE_POINT
-    if t<=25
-        Path_R(t,1:3)=O_R+(Q_R-O_R)*t/25;
-        Path_L(t,1:3)=O_L+(Q_L-O_L)*t/25;
-    elseif t<=50
-        Path_R(t,1:3)=Q_R+(R_R-Q_R)*(t-25)/25;
-        Path_L(t,1:3)=Q_L+(R_L-Q_L)*(t-25)/25;
-    elseif t<=75
-        Path_R(t,1:3)=R_R+(S_R-R_R)*(t-50)/25;
-        Path_L(t,1:3)=R_L+(S_L-R_L)*(t-50)/25;
-    else 
-        Path_R(t,1:3)=S_R+(O_R-S_R)*(t-75)/15;
-        Path_L(t,1:3)=S_L+(O_L-S_L)*(t-75)/15;
+    if t<=DEF_DESCRETE_POINT*0.2
+        Path_R(t,1:3)=R_point1+(R_point2-R_point1)*t/(DEF_DESCRETE_POINT*0.2);
+        Path_L(t,1:3)=L_point1+(L_point2-L_point1)*t/(DEF_DESCRETE_POINT*0.2);
+    elseif t<=DEF_DESCRETE_POINT*0.4
+        Path_R(t,1:3)=R_point2+(R_point3-R_point2)*(t-DEF_DESCRETE_POINT*0.2)/(DEF_DESCRETE_POINT*0.2);
+        Path_L(t,1:3)=L_point2+(L_point3-L_point2)*(t-DEF_DESCRETE_POINT*0.2)/(DEF_DESCRETE_POINT*0.2);
+    elseif t<=DEF_DESCRETE_POINT*0.6
+        Path_R(t,1:3)=R_point3+(R_point4-R_point3)*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2);
+        Path_L(t,1:3)=L_point3+(L_point4-L_point3)*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2);
+    elseif t<=DEF_DESCRETE_POINT*0.8
+        Path_R(t,1:3)=R_point4+(R_point5-R_point4)*(t-DEF_DESCRETE_POINT*0.6)/(DEF_DESCRETE_POINT*0.2);
+        Path_L(t,1:3)=L_point4+(L_point5-L_point4)*(t-DEF_DESCRETE_POINT*0.6)/(DEF_DESCRETE_POINT*0.2);
+    elseif t<=DEF_DESCRETE_POINT
+        Path_R(t,1:3)=R_point5+(R_point6-R_point5)*(t-DEF_DESCRETE_POINT*0.8)/(DEF_DESCRETE_POINT*0.2);
+        Path_L(t,1:3)=L_point5+(L_point6-L_point5)*(t-DEF_DESCRETE_POINT*0.8)/(DEF_DESCRETE_POINT*0.2);
     end
+    
 end
+
 
 %畫直線
 %  O=[0 0 -(L1+L2+L3)]; %初始點
