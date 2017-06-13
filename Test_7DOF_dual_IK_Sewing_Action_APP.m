@@ -35,15 +35,15 @@ theta1=theta1*(180)/pi
  
  %產生正方形O(60,0,0)  Q(80,-20,0)  R(80,-20,-20)  S(60,0,-20)
  %把此路徑分成90份
-O_R=[300 -50 0];
-Q_R=[300 -200 0];
-R_R=[300 -200 -220];
-S_R=[300 -50 -220];
-
-O_L=[300 50 0];
-Q_L=[300 200 0];
-R_L=[300 200 -220];
-S_L=[300 50 -220];
+% O_R=[300 -50 0];
+% Q_R=[300 -200 0];
+% R_R=[300 -200 -220];
+% S_R=[300 -50 -220];
+% 
+% O_L=[300 50 0];
+% Q_L=[300 200 0];
+% R_L=[300 200 -220];
+% S_L=[300 50 -220];
  
 Path_R=zeros(DEF_DESCRETE_POINT,3);%規畫的路徑點
 PathPoint_R=zeros(DEF_DESCRETE_POINT,3);%記錄實際上的點，畫圖使用
@@ -81,8 +81,8 @@ L_point2 = [500 90 0]; %往前200
 R_point3 = [300 -10 0]; %右手鬆開後 x往後退200 
 L_point3 = [500 90 0]; %左手不動
 
-R_point4 = [500 -60 0]; %右手x往前200   y往右-50
-L_point4 = [300 140 0];  %左手x往後200  y往左50
+R_point4 = [500 -10 0]; %右手x 圓周往前200   
+L_point4 = [300 90 0];  %左手x 圓周往後200  
 
 
 R_point5 = [300 -10 0]; %右手鬆開x往後200
@@ -95,14 +95,28 @@ L_point6 = [500 90 0];  %左手x往前200
 
 for t=1:1:DEF_DESCRETE_POINT
     if t<=DEF_DESCRETE_POINT*0.2
-        Path_R(t,1:3)=R_point1+(R_point2-R_point1)*t/(DEF_DESCRETE_POINT*0.2);
-        Path_L(t,1:3)=L_point1+(L_point2-L_point1)*t/(DEF_DESCRETE_POINT*0.2);
+        Path_R(t,1:3)=R_point1+(R_point2-R_point1)*t/(DEF_DESCRETE_POINT*0.2);%往前200
+        Path_L(t,1:3)=L_point1+(L_point2-L_point1)*t/(DEF_DESCRETE_POINT*0.2);%往前200
     elseif t<=DEF_DESCRETE_POINT*0.4
-        Path_R(t,1:3)=R_point2+(R_point3-R_point2)*(t-DEF_DESCRETE_POINT*0.2)/(DEF_DESCRETE_POINT*0.2);
-        Path_L(t,1:3)=L_point2+(L_point3-L_point2)*(t-DEF_DESCRETE_POINT*0.2)/(DEF_DESCRETE_POINT*0.2);
+        Path_R(t,1:3)=R_point2+(R_point3-R_point2)*(t-DEF_DESCRETE_POINT*0.2)/(DEF_DESCRETE_POINT*0.2);%右手鬆開後 x往後退200
+        Path_L(t,1:3)=L_point2+(L_point3-L_point2)*(t-DEF_DESCRETE_POINT*0.2)/(DEF_DESCRETE_POINT*0.2);%左手不動
     elseif t<=DEF_DESCRETE_POINT*0.6
-        Path_R(t,1:3)=R_point3+(R_point4-R_point3)*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2);
-        Path_L(t,1:3)=L_point3+(L_point4-L_point3)*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2);
+        xcR=(500+300)*0.5;
+        ycR=-10;
+        zcR=0;
+        rR=500-xcR;
+        
+        xcL=(500+300)*0.5;
+        ycL=90;
+        zcL=0;
+        rL=500-xcL;
+        
+        
+        Path_R(t,1:3)=[xcR ycR zcR]+rR*[cos( pi*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2) + pi) sin(pi*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2) + pi) 0]; %右手下到上弧形
+        Path_L(t,1:3)=[xcL ycL zcL]+rL*[cos( pi*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2)) sin(pi*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2)) 0]; %左手上到下弧形
+        
+        %Path_R(t,1:3)=R_point3+(R_point4-R_point3)*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2);
+        %Path_L(t,1:3)=L_point3+(L_point4-L_point3)*(t-DEF_DESCRETE_POINT*0.4)/(DEF_DESCRETE_POINT*0.2);
     elseif t<=DEF_DESCRETE_POINT*0.8
         Path_R(t,1:3)=R_point4+(R_point5-R_point4)*(t-DEF_DESCRETE_POINT*0.6)/(DEF_DESCRETE_POINT*0.2);
         Path_L(t,1:3)=L_point4+(L_point5-L_point4)*(t-DEF_DESCRETE_POINT*0.6)/(DEF_DESCRETE_POINT*0.2);
